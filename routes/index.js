@@ -2,19 +2,17 @@ import db from "../module/index.js"
 import express from "express"
 const router = express.Router()
 
-router.get("/", (req, res) => {
-    console.log("yolo")
+router.get("/all", (req, res) => {
+    console.log("test")
+    db.find().then(data => {
+        res.status(200).json(data)
+    }).catch(err => {
+        console.log(err)
+        res.status(401);
+        
+    })
 })
-
 router.post("/post", (req, res) => {
-    // db.create(req.body, (err, data)=>{
-    //     if(err){
-    //         console.log("err")
-    //     }else{
-    //         console.log(data)
-    //     }
-    // })
-   
         db.create(req.body).then(data => {
             console.log(data)
             res.status(200).json(data)

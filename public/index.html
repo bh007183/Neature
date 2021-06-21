@@ -21,7 +21,13 @@
           </ul>
         </div>
     </nav>
-    <input></input>
+
+    <main class="container" id="notes">
+
+
+
+    </main>
+  
 
     <!-- Modal Structure -->
     <div id="modal1" class="modal">
@@ -39,21 +45,22 @@
           </div>
       </div>
       <div class="modal-footer">
-        <a href="#!" class="waves-effect waves-green btn-flat submit">Submit</a>
+        <a  class="waves-effect waves-green btn-flat submit">Submit</a>
       </div>
     </div>
-    
-</body>
-<script src="./js/index.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
 if("serviceWorker" in navigator){
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js").then(reg => {
+        navigator.serviceWorker.register("./service-worker.js").then(reg => {
             console.log("We found your service worker file!", reg)
         })
     })
 }
 </script>
+<script src="./js/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+</body>
+
 </html>

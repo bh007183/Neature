@@ -1,13 +1,12 @@
+
 const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
 
-const staticFilesToPreCache = [
-    "/",
-    "/js/index.js"
-]
-
+const staticFilesToPreCache = ["/","/js/index.js"]
+console.log("service worker file ran")
 // install
 self.addEventListener("install", function(evt) {
+    console.log(evt)
     evt.waitUntil(
       caches.open(CACHE_NAME).then(cache => {
         console.log("Your files were pre-cached successfully!");
@@ -52,6 +51,7 @@ self.addEventListener("fetch", function(evt) {
               return response;
             })
             .catch(err => {
+                console.log(err)
               // Network request failed, try to get it from the cache.
               return cache.match(evt.request);
             });
@@ -68,4 +68,8 @@ self.addEventListener("fetch", function(evt) {
       );
     }
   });
+
+
+
+
   
