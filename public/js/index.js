@@ -1,40 +1,39 @@
 const PlantDB = "Notes";
 let db;
-var request = window.indexedDB.open(PlantDB, 1);
+const request = window.indexedDB.open(PlantDB, 1);
+console.log(request);
 
-$(document).ready(function(){
-  $('.modal').modal();
+$(document).ready(function () {
+  $(".modal").modal();
 });
 
-$.get("/all").then(res => {
+$.get("/all")
+  .then((res) => {
+    for (let i = 0; i < res.length; i++) {
+      let outer = $("<div>").css("background", "gray").attr("class", "row");
+      let col3 = $("<div>").attr({ class: "sm3 col" });
+      let col9 = $("<div>").attr({ class: "sm9 col" });
+      let titleTxt = $("<p>").text(`${res[i].title}`);
+      let contTxt = $("<p>").text(`${res[i].notes}`);
+      $(".container").prepend(
+        outer.append(col3.append(titleTxt), col9.append(contTxt))
+      );
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-  for(let i = 0; i< res.length; i++){
-
-    let outer = $("<div>").css("background", "gray").attr("class", "row")
-    let col3 = $("<div>").attr({class: "sm3 col"})
-    let col9 = $("<div>").attr({class: "sm9 col"})
-    let titleTxt = $("<p>").text(`${res[i].title}`)
-    let contTxt = $("<p>").text(`${res[i].notes}`)
-    $(".container").prepend(
-      outer.append(col3.append(titleTxt), col9.append(contTxt)) 
-      
-    )
-  }
-}).catch(err => {
-  console.log(err)
-})
-
-
-request.onerror = function(event) {
-  console.log(event)
+request.onerror = function (event) {
+  console.log(event);
 };
-request.onupgradeneeded = function(event) {
-    console.log(event.target)
+request.onupgradeneeded = function (event) {
+  console.log(event.target);
   db = event.target.result;
 
   // Create an objectStore to hold information about our customers.
-  const objectStore = db.createObjectStore("OffLine", { autoIncrement: true});
-  
+  const objectStore = db.createObjectStore("OffLine", { autoIncrement: true });
+
   // Create an index to search customers by name. We may have duplicates
   // so we can't use a unique index.
   objectStore.createIndex("title", "title", { unique: false });
@@ -43,50 +42,83 @@ request.onupgradeneeded = function(event) {
   // finished before adding data into it.
 };
 
+request.onsuccess = function (event) {
+  db = event.target.result;
 
-$(".submit").on("click", function(){
-  let obj ={
-    title: $(".title").val(),
-    notes: $(".note").val()
+  // check if app is online before reading from db
+  if (navigator.onLine) {
+    console.log("online");
+  } else {
+    console.log("offline");
   }
-  console.log(db)
-  if(navigator.onLine === true){
+};
+
+$(".submit").on("click", function () {
+  let obj = {
+    title: $(".title").val(),
+    notes: $(".note").val(),
+  };
+  console.log(db);
+  if (navigator.onLine === true) {
     $.ajax("/post", {
       method: "POST",
       data: obj,
+    })
+      .then((res) => {
+        let outer = $("<div>").css("background", "gray").attr("class", "row");
+        let col3 = $("<div>").attr({ class: "sm3 col" });
+        let col9 = $("<div>").attr({ class: "sm9 col" });
+        let titleTxt = $("<p>").text(`${res.title}`);
+        let contTxt = $("<p>").text(`${res.notes}`);
+        $(".container").prepend(
+          outer.append(col3.append(titleTxt), col9.append(contTxt))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+
+    const transaction = db
+      .transaction(["OffLine"], "readwrite")
+      .objectStore("OffLine");
+    transaction.add({ title: obj.title, notes: obj.notes });
+
+    const gettransaction = db
+      .transaction(["OffLine"], "readwrite")
+      .objectStore("OffLine");
+    const plants = gettransaction.getAll();
+    plants.onsuccess = function () {
+      console.log(plants.result);
+        let obj = plants.result[plants.result.length -1]
+        let outer = $("<div>").css("background", "gray").attr("class", "row");
+        let col3 = $("<div>").attr({ class: "sm3 col" });
+        let col9 = $("<div>").attr({ class: "sm9 col" });
+        let titleTxt = $("<p>").text(`${obj.title}`);
+        let contTxt = $("<p>").text(`${obj.notes}`);
+        $(".container").prepend(
+          outer.append(col3.append(titleTxt), col9.append(contTxt))
+        );
+      
+    };
+  }
+});
+
+
+window.addEventListener("online", function(){
+  const dumptransaction = db.transaction(["OffLine"], "readwrite").objectStore("OffLine");
+  const plants = dumptransaction.getAll();
+  plants.onsuccess = function(){
+    console.log(plants.result)
+    $.ajax("/data/dump", {
+      method: "POST",
+      data: {data: plants.result},
+      dataType: "JSON",
     }).then(res => {
-      let outer = $("<div>").css("background", "gray").attr("class", "row")
-    let col3 = $("<div>").attr({class: "sm3 col"})
-    let col9 = $("<div>").attr({class: "sm9 col"})
-    let titleTxt = $("<p>").text(`${res.title}`)
-    let contTxt = $("<p>").text(`${res.notes}`)
-    $(".container").prepend(
-      outer.append(col3.append(titleTxt), col9.append(contTxt)) 
-    )
+      console.log(res)
     }).catch(err => {
       console.log(err)
     })
-  }else{
-    console.log("test")
-    console.log(db)
-
-    const transaction = db.transaction(["OffLine"], "readwrite").objectStore("OffLine")
-    transaction.add({title: obj.title, notes: obj.notes})
-
-    const gettransaction = db.transaction(["OffLine"], "readwrite").objectStore("OffLine")
-    let plants = gettransaction.getAll()
-    console.log(plants.result)
-
-    for(let i = 0; i < plants.result.length; i++){
-      let outer = $("<div>").css("background", "gray").attr("class", "row")
-    let col3 = $("<div>").attr({class: "sm3 col"})
-    let col9 = $("<div>").attr({class: "sm9 col"})
-    let titleTxt = $("<p>").text(`${plants.result[i].title}`)
-    let contTxt = $("<p>").text(`${plants.result[i].notes}`)
-    $(".container").prepend(
-      outer.append(col3.append(titleTxt), col9.append(contTxt)) 
-      
-    )
-    }
   }
-})
+
+});

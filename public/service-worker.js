@@ -1,8 +1,8 @@
 
 const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
-
 const staticFilesToPreCache = ["/","/js/index.js"]
+
 console.log("service worker file ran")
 // install
 self.addEventListener("install", function(evt) {
@@ -16,7 +16,6 @@ self.addEventListener("install", function(evt) {
   
     self.skipWaiting();
   });
-
   // activate
 self.addEventListener("activate", function(evt) {
     evt.waitUntil(
@@ -31,7 +30,6 @@ self.addEventListener("activate", function(evt) {
         );
       })
     );
-  
     self.clients.claim();
   });
 

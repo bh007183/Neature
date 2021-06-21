@@ -22,5 +22,17 @@ router.post("/post", (req, res) => {
     
 })
 
+router.post("/data/dump", (req, res) => {
+    console.log(req.body.data)
+  
+        db.insertMany(req.body.data).then(data => {
+            console.log(data)
+            res.status(200).json(data)
+         }).catch(err => res.status(401))
+
+   
+    
+})
+
 
 export default router

@@ -5,7 +5,7 @@ import mongoose from "mongoose"
 import plantRoutes from "./routes/index.js"
 
 const app = express()
-const PORT = process.env.PORT || 8070
+const PORT = process.env.PORT || 8080
 
 app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
