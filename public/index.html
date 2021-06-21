@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
         <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -16,16 +17,36 @@
         <div class="nav-wrapper">
           <a href="#" class="brand-logo">Logo</a>
           <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="sass.html">Sass</a></li>
-            <li><a onclick="handleOtherClick()">Components</a></li>
-            <li><a onclick="handleClick()">JavaScript</a></li>
+            <li> <i class="material-icons btn modal-trigger"  href="#modal1" id="add">add</i></li>
           </ul>
         </div>
     </nav>
     <input></input>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+          <div class="container">
+              <div class="row">
+                <h4>Note</h4>
+              </div>
+              <div class="row center">
+                <input class="title" placeholder="Title"></input>
+              </div>
+              <div class="row center">
+                <textarea class="note" placeholder="Note"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="waves-effect waves-green btn-flat submit">Submit</a>
+      </div>
+    </div>
     
 </body>
 <script src="./js/index.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
 if("serviceWorker" in navigator){
     window.addEventListener("load", () => {

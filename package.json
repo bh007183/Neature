@@ -3,10 +3,11 @@
   "name": "neature",
   "version": "1.0.0",
   "description": "",
-  "main": "routes.js",
+  "main": "server.js",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.12.13"
+    "mongoose": "^5.12.13",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {},
   "scripts": {
